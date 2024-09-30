@@ -56,7 +56,6 @@ void stirmotors();                        // This function runs the stir motors
 void runsensors();                        // This function tells the arduino to collect data from the photoresistor 
 void checksetpoint();                     // This function checks to see if the sensor value has hit the set point 
 void primepump();                         // This function allows for the priming of the pump 
-void LEDs(); 
 
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -98,7 +97,6 @@ void loop(){
   runsensors();                       // Calls the function runsensors 
   checksetpoint();                    // Calls the function checksetpoint 
   primepump();                        // calls the function primepump 
-  LEDs();
 
 }
 
@@ -174,4 +172,3 @@ if(currenttime - previousintervalsensor >= sensordelay) {   // If the current ti
   //}
 }
 
-// NeoPixel LEDs 
