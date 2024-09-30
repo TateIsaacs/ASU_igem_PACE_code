@@ -162,13 +162,3 @@ if(currenttime - previousintervalsensor >= sensordelay) {   // If the current ti
    }
 }
                                      // This prints a new line, by having this outside the if statement then it will print a new line after the second sensor reading but then it will also print a new line if the if statement is executed -- not sure bout this... 
-
-  //Pump Priming Function 
-  void primepump() {                                      // This function is to allow the user to prime the pump by pressing a button 
-  if(digitalRead(primingbutton) == HIGH){                 // This reads the value of the priming button if the button is pressed it connects the circuit to ground and thus reads a high value across the pin 
-    analogWrite(pump,255);                                // This tells the pump to run at full speed when the button is pressed, we could use the run pump function here if we wanted to but the user may want to change the speed of the pump during the experiment and they probalby don't want to also change the speed of the pump when it is priming at the same time. 
-  } //else {
-    //analogWrite(pump,0);
-  //}
-}
-
