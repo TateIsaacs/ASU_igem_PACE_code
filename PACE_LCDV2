@@ -41,7 +41,8 @@ unsigned long pumponinterval = 1000;        // This variable controls how long t
 unsigned long currenttime = 0;              // This variable represents the current time of the system we set it to 0 to start
 
 
-
+unsigned long currenttimeclean = 0;
+unsigned long timewhenclicked = 0;
 
 // Mid log Set point Variables
 int setpoint = 800;                         // This variable is set to the value of the photoresistor when the bacteria should hit mid log growth. When the photoresistor reading matches this set point the pump will turn on and move media.
@@ -105,7 +106,7 @@ bool turnred = false;
 bool turngreen = false;
 bool turnuv = false;
 bool turnblack = false;
-bool stopcleaning = false;
+bool stopcleaning = true;
 
 
 const int chipSelect = 10;
@@ -181,7 +182,7 @@ void loop() {
     LEDs();
   }
 
-  if (runsystem == false && runsystemsd == false && runcalibration == false) {
+  if (runsystem == false && runsystemsd == false && runcalibration == false && settime == false && stopcleaning == true) {
     analogWrite(stir1,0);
     analogWrite(pump,0);
     
@@ -271,13 +272,21 @@ void runpump(){
 
 
 void runpumptime(){ 
- if ((millis() < time*60000) && stopcleaning == false) {
+ currenttimeclean = millis();
+
+ if ((currenttimeclean - timewhenclicked < (time*60000)))  {
+ 
  analogWrite(pump, 255);
+ 
+ 
  }
- else {
+ else if (currenttimeclean - timewhenclicked > (time*60000)){
  analogWrite(pump, 0);
+
  settime = false;  
  }            
+ stopcleaning = true;
+ 
 }
 
 void stopclean(){
@@ -329,6 +338,7 @@ if(currenttime - previousintervalsensor >= sensordelay) {   // If the current ti
    sensor1 = analogRead(sensor1pin);                        // This uses the analog read command to allow us to read the voltage from the sensor pin this voltage is then converted to a range by the microcontroller from 0-1023
     //sensor2 = analogRead(sensor_pin2);                    // read another sensor pin
 
+ 
 
 
 
@@ -652,7 +662,10 @@ void handleButtonPress() {
 
         lcd.setCursor(0,1);
         lcd.print("Click to stop");
+
+      timewhenclicked = millis();
       settime = true;
+      stopcleaning = false;
       currentMenu = SUBSTOPCLEANING;
       
       break;
@@ -715,8 +728,8 @@ void handleButtonPress() {
       break;
 
     case SUBSTOPCLEANING:
-
-      
+      lcd.clear();
+      stopcleaning = true;
       settime = false;
       currentMenu = MAIN_MENU;
       break;
@@ -749,7 +762,7 @@ void green() {
 
 
 void uv() {
-    for (int f = 8; f < 12; f++) {
+    for (int f = numleds; f < numledsuv; f++) {
     pixelsuv.setPixelColor(f,pixelsuv.Color(255,255,255));
     }
   pixelsuv.show();                   
